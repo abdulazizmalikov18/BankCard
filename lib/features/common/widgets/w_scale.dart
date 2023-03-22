@@ -22,7 +22,7 @@ class WScaleAnimation extends StatefulWidget {
         super(key: key);
 
   @override
-  _WScaleAnimationState createState() => _WScaleAnimationState();
+  State<WScaleAnimation> createState() => _WScaleAnimationState();
 }
 
 class _WScaleAnimationState extends State<WScaleAnimation>

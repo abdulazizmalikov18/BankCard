@@ -1,6 +1,4 @@
 import 'package:bankcard/assets/colors/colors.dart';
-import 'package:bankcard/features/common/widgets/w_scale.dart';
-import 'package:bankcard/features/main/presentation/views/card_edit_view.dart';
 import 'package:bankcard/utils/my_function.dart';
 import 'package:flutter/material.dart';
 

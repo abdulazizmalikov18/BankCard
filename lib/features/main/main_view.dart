@@ -1,5 +1,3 @@
-import 'package:bankcard/assets/colors/colors.dart';
-import 'package:bankcard/features/common/widgets/w_scale.dart';
 import 'package:bankcard/features/main/presentation/controllers/card/card_bloc.dart';
 import 'package:bankcard/features/main/presentation/views/card_add_view.dart';
 import 'package:bankcard/features/main/presentation/views/card_edit_view.dart';
@@ -18,7 +16,9 @@ class MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Cards"),
+      ),
       body: BlocBuilder<CardBloc, CardState>(
         builder: (context, state) {
           return ListView.builder(
@@ -34,7 +34,12 @@ class MainViewState extends State<MainView> {
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => CardEditView(
-                    index: index,
+                    image: state.cards[index].assets,
+                    date: state.cards[index].cardDate,
+                    name: state.cards[index].cardName,
+                    number: state.cards[index].cardNumber,
+                    price: state.cards[index].cardPrice,
+                    type: state.cards[index].cardType,
                   ),
                 ),
               ),
