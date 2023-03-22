@@ -2,6 +2,7 @@ import 'package:bankcard/features/main/presentation/controllers/card/card_bloc.d
 import 'package:bankcard/features/main/presentation/views/card_add_view.dart';
 import 'package:bankcard/features/main/presentation/views/card_edit_view.dart';
 import 'package:bankcard/features/main/presentation/widgets/bank_card.dart';
+import 'package:bankcard/utils/my_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,7 +31,7 @@ class MainViewState extends State<MainView> {
               name: state.cards[index].cardName,
               number: state.cards[index].cardNumber,
               price: state.cards[index].cardPrice,
-              type: state.cards[index].cardType,
+              type: MyFunction.cardType(type: state.cards[index].cardType),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => CardEditView(
@@ -39,7 +40,8 @@ class MainViewState extends State<MainView> {
                     name: state.cards[index].cardName,
                     number: state.cards[index].cardNumber,
                     price: state.cards[index].cardPrice,
-                    type: state.cards[index].cardType,
+                    type:
+                        MyFunction.cardType(type: state.cards[index].cardType),
                   ),
                 ),
               ),

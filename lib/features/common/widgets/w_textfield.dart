@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyTextField extends StatelessWidget {
   const MyTextField({
@@ -6,20 +7,29 @@ class MyTextField extends StatelessWidget {
     required this.controller,
     this.margin = const EdgeInsets.all(16),
     this.hintText = '',
+    this.type = TextInputType.name,
+    this.formatter,
+    this.onChanged,
   });
 
   final TextEditingController controller;
   final EdgeInsets margin;
   final String hintText;
+  final TextInputType type;
+  final List<TextInputFormatter>? formatter;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 48,
-      margin:margin,
+      margin: margin,
       child: TextField(
         controller: controller,
         cursorHeight: 18,
+        onChanged: onChanged,
+        keyboardType: type,
+        inputFormatters: formatter,
         decoration: InputDecoration(
           hintText: hintText,
           contentPadding: const EdgeInsets.symmetric(

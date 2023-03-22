@@ -1,25 +1,30 @@
 import 'package:bankcard/assets/colors/colors.dart';
+import 'package:bankcard/features/common/components/card_type.dart';
 import 'package:bankcard/utils/my_function.dart';
 import 'package:flutter/material.dart';
 
 class BankCard extends StatelessWidget {
   const BankCard({
     super.key,
-    required this.image,
+    this.image,
     required this.name,
     required this.number,
     required this.date,
     required this.type,
     required this.price,
     required this.onTap,
+    this.colors,
+    this.isNew = false,
   });
-  final String image;
+  final String? image;
   final String name;
   final String number;
   final String date;
-  final String type;
+  final CardType type;
   final String price;
+  final LinearGradient? colors;
   final VoidCallback onTap;
+  final bool isNew;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +36,13 @@ class BankCard extends StatelessWidget {
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          image: DecorationImage(
-            image: AssetImage(image),
-            fit: BoxFit.cover,
-          ),
-          gradient: const LinearGradient(
-            colors: [Colors.amber, Colors.red, Colors.blue],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
+          image: image != null
+              ? DecorationImage(
+                  image: AssetImage(image!),
+                  fit: BoxFit.cover,
+                )
+              : null,
+          gradient: colors,
         ),
         alignment: Alignment.bottomCenter,
         child: Container(
@@ -64,24 +67,36 @@ class BankCard extends StatelessWidget {
                       color: white,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '$price UZS',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: white,
+                  if (!isNew)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        '$price UZS',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: white,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${number.substring(0, 7)} .... ${number.substring(15)}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: white,
+                  if (!isNew)
+                    Text(
+                      '${number.substring(0, 7)} .... ${number.substring(15)}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: white,
+                      ),
                     ),
-                  ),
+                  if (isNew)
+                    Text(
+                      number,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: white,
+                      ),
+                    ),
                   const SizedBox(height: 4),
                   Text(
                     date,
@@ -93,19 +108,11 @@ class BankCard extends StatelessWidget {
                   ),
                 ],
               ),
-              if (MyFunction.cardIconType(type: type).isNotEmpty)
-                Container(
-                  height: 60,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        MyFunction.cardIconType(type: type),
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                )
+              SizedBox(
+                height: 60,
+                width: 80,
+                child: MyFunction.getCardIcon(type),
+              )
             ],
           ),
         ),
