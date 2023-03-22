@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bankcard/assets/colors/colors.dart';
 import 'package:bankcard/assets/constants/formatters.dart';
 import 'package:bankcard/features/common/components/card_type.dart';
@@ -9,6 +11,7 @@ import 'package:bankcard/features/main/presentation/widgets/bank_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CardEditView extends StatefulWidget {
   const CardEditView({
@@ -38,6 +41,16 @@ class _CardEditViewState extends State<CardEditView> {
   TextEditingController dateController = TextEditingController();
   int select = 0;
   bool isImage = true;
+  File? imageMy;
+
+  Future getImage() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return null;
+    final imageTempopary = File(image.path);
+    setState(() {
+      imageMy = imageTempopary;
+    });
+  }
 
   @override
   void initState() {
@@ -63,14 +76,21 @@ class _CardEditViewState extends State<CardEditView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 BankCard(
-                  image: isImage ? images[select] : null,
-                  date: widget.date,
-                  name: widget.name,
-                  number: widget.number,
-                  price: widget.price,
-                  type: widget.type,
-                  colors: colors[select],
-                  onTap: () {},
+                    image: isImage ? images[select] : null,
+                    date: widget.date,
+                    name: widget.name,
+                    number: widget.number,
+                    price: widget.price,
+                    type: widget.type,
+                    colors: colors[select],
+                    onTap: () {},
+                    imageMy: imageMy),
+                WButton(
+                  onTap: () {
+                    getImage();
+                  },
+                  text: 'Galary',
+                  margin: const EdgeInsets.all(16),
                 ),
                 SizedBox(
                   height: 60,
@@ -84,6 +104,7 @@ class _CardEditViewState extends State<CardEditView> {
                         setState(() {
                           select = index;
                           isImage = true;
+                          imageMy = null;
                         });
                       },
                       child: Container(
@@ -128,6 +149,7 @@ class _CardEditViewState extends State<CardEditView> {
                         setState(() {
                           select = index;
                           isImage = false;
+                          imageMy = null;
                         });
                       },
                       child: Container(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bankcard/assets/colors/colors.dart';
 import 'package:bankcard/features/common/components/card_type.dart';
 import 'package:bankcard/utils/my_function.dart';
@@ -15,6 +17,7 @@ class BankCard extends StatelessWidget {
     required this.onTap,
     this.colors,
     this.isNew = false,
+    this.imageMy,
   });
   final String? image;
   final String name;
@@ -25,6 +28,7 @@ class BankCard extends StatelessWidget {
   final LinearGradient? colors;
   final VoidCallback onTap;
   final bool isNew;
+  final File? imageMy;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +40,17 @@ class BankCard extends StatelessWidget {
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          image: image != null
+          image: imageMy != null
               ? DecorationImage(
-                  image: AssetImage(image!),
+                  image: FileImage(imageMy!),
                   fit: BoxFit.cover,
                 )
-              : null,
+              : image != null
+                  ? DecorationImage(
+                      image: AssetImage(image!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
           gradient: colors,
         ),
         alignment: Alignment.bottomCenter,
