@@ -29,7 +29,11 @@ class _AddCardViewState extends State<AddCardView> {
   TextEditingController controllerCardCvv = TextEditingController();
   TextEditingController dateController = TextEditingController();
   int select = Random().nextInt(7);
-  bool isImage = true;
+  bool isImage = true,
+      nameEmpty = false,
+      numberEmpty = false,
+      cvvCodeEmpty = false,
+      dateEmpty = false;
   CardType cardType = CardType.Invalid;
 
   File? imageMy;
@@ -182,7 +186,12 @@ class _AddCardViewState extends State<AddCardView> {
               MyTextField(
                 controller: controller,
                 hintText: "Card Name",
-                onChanged: (p0) {
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    nameEmpty = false;
+                  } else {
+                    nameEmpty = true;
+                  }
                   setState(() {});
                 },
               ),
@@ -191,23 +200,31 @@ class _AddCardViewState extends State<AddCardView> {
                   Expanded(
                     flex: 3,
                     child: MyTextField(
-                      onChanged: (p0) {
+                      onChanged: (value) {
+                        if (value.isEmpty || value.length < 18) {
+                          numberEmpty = false;
+                        } else {
+                          numberEmpty = true;
+                        }
                         setState(() {});
                       },
                       controller: controllerCardNumber,
                       margin: const EdgeInsets.only(left: 16),
                       type: TextInputType.number,
                       hintText: '#### #### #### ####',
-                      formatter: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(16),
-                        CardNumberInputFormatter()
-                      ],
+                      formatter: [cardFormatr],
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: MyTextField(
+                      onChanged: (value) {
+                        if (value.isEmpty || value.length < 2) {
+                          cvvCodeEmpty = false;
+                        } else {
+                          cvvCodeEmpty = true;
+                        }
+                      },
                       controller: controllerCardCvv,
                       hintText: '###',
                       formatter: [
@@ -225,7 +242,12 @@ class _AddCardViewState extends State<AddCardView> {
                 child: MyTextField(
                   controller: dateController,
                   hintText: '##/##',
-                  onChanged: (p0) {
+                  onChanged: (value) {
+                    if (value.isEmpty || value.length < 3) {
+                      dateEmpty = false;
+                    } else {
+                      dateEmpty = true;
+                    }
                     setState(() {});
                   },
                   formatter: [
@@ -243,19 +265,25 @@ class _AddCardViewState extends State<AddCardView> {
           margin: const EdgeInsets.fromLTRB(16, 01, 16, 16),
           text: 'Save',
           onTap: () {
-            context.read<CardBloc>().add(
-                  CardListAdd(
-                    image: imageMy,
-                    assets: images[select],
-                    status: isImage ? CardDesign.assets : CardDesign.colors,
-                    cardCvv: controllerCardCvv.text,
-                    cardDate: dateController.text,
-                    cardName: controller.text,
-                    cardNumber: controllerCardNumber.text,
-                    colors: select,
-                  ),
-                );
-            Navigator.pop(context);
+            if (nameEmpty && numberEmpty && cvvCodeEmpty && dateEmpty) {
+              context.read<CardBloc>().add(
+                    CardListAdd(
+                      image: imageMy,
+                      assets: images[select],
+                      status: isImage ? CardDesign.assets : CardDesign.colors,
+                      cardCvv: controllerCardCvv.text,
+                      cardDate: dateController.text,
+                      cardName: controller.text,
+                      cardNumber: controllerCardNumber.text,
+                      colors: select,
+                    ),
+                  );
+              Navigator.pop(context);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Malumotlarni toldiring')),
+              );
+            }
           },
         ),
       ),

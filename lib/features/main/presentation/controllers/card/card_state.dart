@@ -1,25 +1,25 @@
 part of 'card_bloc.dart';
 
 class CardState extends Equatable {
-  final CardDesign status;
-  final List<CardEntity> cards;
+  final CardDesign statusCard;
+  final FormzStatus status;
   final List<BankCardEntity> cardsList;
   const CardState({
-    this.status = CardDesign.assets,
-    this.cards = const [],
+    this.statusCard = CardDesign.assets,
     this.cardsList = const [],
+    this.status = FormzStatus.pure,
   });
 
   CardState copyWith({
-    CardDesign? status,
-    List<CardEntity>? cards,
+    FormzStatus? status,
+    CardDesign? statusCard,
     List<BankCardEntity>? cardsList,
   }) =>
       CardState(
-        status: status ?? this.status,
-        cards: cards ?? this.cards,
+        statusCard: statusCard ?? this.statusCard,
         cardsList: cardsList ?? this.cardsList,
+        status: status ?? this.status,
       );
   @override
-  List<Object?> get props => [status, cards, cardsList];
+  List<Object?> get props => [status, cardsList, statusCard];
 }

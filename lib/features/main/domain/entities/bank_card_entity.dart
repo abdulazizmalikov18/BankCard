@@ -9,14 +9,14 @@ class BankCardEntity {
   final int? color;
   final int isImage;
 
-  BankCardEntity({
+  const BankCardEntity({
     this.id = 0,
     this.cardHolderName = '',
     this.cardNumber = '',
     this.expiryDate = '',
     this.cvvCode = '',
     this.file,
-    this.assets ='',
+    this.assets = '',
     this.color = 0,
     this.isImage = 0,
   });

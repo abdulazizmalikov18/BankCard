@@ -10,6 +10,7 @@ class MyTextField extends StatelessWidget {
     this.type = TextInputType.name,
     this.formatter,
     this.onChanged,
+    this.validator,
   });
 
   final TextEditingController controller;
@@ -18,13 +19,15 @@ class MyTextField extends StatelessWidget {
   final TextInputType type;
   final List<TextInputFormatter>? formatter;
   final Function(String)? onChanged;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 48,
       margin: margin,
-      child: TextField(
+      child: TextFormField(
+        validator: validator,
         controller: controller,
         cursorHeight: 18,
         onChanged: onChanged,

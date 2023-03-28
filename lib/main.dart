@@ -1,9 +1,14 @@
+import 'package:bankcard/core/singletons/service_locator.dart';
+import 'package:bankcard/core/singletons/storage.dart';
 import 'package:bankcard/features/main/main_view.dart';
 import 'package:bankcard/features/main/presentation/controllers/card/card_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await StorageRepository.getInstance();
+  setupLocator();
   runApp(const App());
 }
 

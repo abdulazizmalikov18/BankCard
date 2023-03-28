@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 
 class DioSettings {
   BaseOptions _dioBaseOptions = BaseOptions(
-    baseUrl: 'https://panel.avto.uz/api/v1/',
+    baseUrl: 'https://salom.com/',
     connectTimeout: const Duration(milliseconds: 35000),
     receiveTimeout: const Duration(milliseconds: 35000),
     followRedirects: false,
@@ -19,7 +19,7 @@ class DioSettings {
 
   void setBaseOptions({String? lang}) {
     _dioBaseOptions = BaseOptions(
-      baseUrl: 'https://panel.avto.uz/api/v1/',
+      baseUrl: 'https://salom.com/',
       connectTimeout: const Duration(milliseconds: 35000),
       receiveTimeout: const Duration(milliseconds: 35000),
       headers: <String, dynamic>{'Accept-Language': lang},
@@ -41,10 +41,4 @@ class DioSettings {
       error: kDebugMode,
       logPrint: (object) => dev.log(object.toString()),
     ));
-  // ..interceptors.add(Alice(
-  //   navigatorKey: AppConstants.navigatorKey,
-  //   showNotification: chuck || kDebugMode,
-  //   showInspectorOnShake: chuck || kDebugMode,
-  //   darkTheme: false,
-  // ).getDioInterceptor());
 }

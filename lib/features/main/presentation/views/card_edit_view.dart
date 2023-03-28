@@ -24,6 +24,7 @@ class CardEditView extends StatefulWidget {
     required this.price,
     required this.cvvCode,
     this.file,
+    required this.isImage,
   });
   final String image;
   final String name;
@@ -34,6 +35,7 @@ class CardEditView extends StatefulWidget {
   final String price;
   final File? file;
   final int id;
+  final bool isImage;
 
   @override
   State<CardEditView> createState() => _CardEditViewState();
@@ -60,6 +62,7 @@ class _CardEditViewState extends State<CardEditView> {
     if (widget.file == null) {
       select = images.indexOf(widget.image);
     }
+    isImage = widget.isImage;
     imageMy = widget.file;
     controller.text = widget.name;
     super.initState();
