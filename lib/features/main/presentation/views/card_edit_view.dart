@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bankcard/assets/colors/colors.dart';
-import 'package:bankcard/assets/constants/formatters.dart';
 import 'package:bankcard/features/common/components/card_type.dart';
 import 'package:bankcard/features/common/widgets/w_button.dart';
 import 'package:bankcard/features/common/widgets/w_scale.dart';
@@ -9,7 +8,6 @@ import 'package:bankcard/features/common/widgets/w_textfield.dart';
 import 'package:bankcard/features/main/presentation/controllers/card/card_bloc.dart';
 import 'package:bankcard/features/main/presentation/widgets/bank_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -17,21 +15,25 @@ import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 class CardEditView extends StatefulWidget {
   const CardEditView({
     super.key,
+    required this.id,
     required this.image,
     required this.name,
     required this.number,
     required this.date,
     required this.type,
     required this.price,
+    required this.cvvCode,
     this.file,
   });
   final String image;
   final String name;
+  final String cvvCode;
   final String number;
   final String date;
   final CardType type;
   final String price;
   final File? file;
+  final int id;
 
   @override
   State<CardEditView> createState() => _CardEditViewState();
@@ -39,9 +41,7 @@ class CardEditView extends StatefulWidget {
 
 class _CardEditViewState extends State<CardEditView> {
   TextEditingController controller = TextEditingController();
-  TextEditingController controllerCardNumber = TextEditingController();
-  TextEditingController controllerCardCvv = TextEditingController();
-  TextEditingController dateController = TextEditingController();
+
   int select = 0;
   bool isImage = true;
   File? imageMy;
@@ -57,13 +57,11 @@ class _CardEditViewState extends State<CardEditView> {
 
   @override
   void initState() {
-    if (widget.file != null) {
+    if (widget.file == null) {
       select = images.indexOf(widget.image);
     }
+    imageMy = widget.file;
     controller.text = widget.name;
-    controllerCardCvv.text = '001';
-    controllerCardNumber.text = widget.number;
-    dateController.text = widget.date;
     super.initState();
   }
 
@@ -82,11 +80,7 @@ class _CardEditViewState extends State<CardEditView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   BankCard(
-                    image: widget.file == null
-                        ? isImage
-                            ? images[select]
-                            : null
-                        : null,
+                    image: isImage ? images[select] : null,
                     date: widget.date,
                     name: widget.name,
                     number: widget.number,
@@ -94,7 +88,7 @@ class _CardEditViewState extends State<CardEditView> {
                     type: widget.type,
                     colors: colors[select],
                     onTap: () {},
-                    imageMy: widget.file,
+                    imageMy: imageMy,
                   ),
                   WButton(
                     onTap: () {
@@ -210,13 +204,12 @@ class _CardEditViewState extends State<CardEditView> {
                     image: imageMy,
                     assets: images[select],
                     status: isImage ? CardDesign.assets : CardDesign.colors,
-                    cardCvv: controllerCardCvv.text,
-                    cardDate: dateController.text,
+                    cardCvv: widget.cvvCode,
+                    cardDate: widget.date,
                     cardName: controller.text,
-                    cardNumber: controllerCardNumber.text,
-                    cardPrice: '0',
-                    cardType: 'humo',
+                    cardNumber: widget.number,
                     colors: select,
+                    index: widget.id,
                   ),
                 );
             Navigator.pop(context);

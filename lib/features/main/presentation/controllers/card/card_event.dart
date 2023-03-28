@@ -7,8 +7,6 @@ class CardsList extends CardEvent {}
 class CardEdit extends CardEvent {
   final CardDesign status;
   final int index;
-  final String cardType;
-  final String cardPrice;
   final String? assets;
   final String cardNumber;
   final String cardDate;
@@ -27,15 +25,11 @@ class CardEdit extends CardEvent {
     this.cardName = '',
     this.cardDate = '',
     this.cardNumber = '',
-    this.cardType = '',
-    this.cardPrice = '',
   });
 }
 
 class CardListAdd extends CardEvent {
   final CardDesign status;
-  final String cardType;
-  final String cardPrice;
   final String? assets;
   final String cardNumber;
   final String cardDate;
@@ -53,7 +47,5 @@ class CardListAdd extends CardEvent {
     this.cardName = '',
     this.cardDate = '',
     this.cardNumber = '',
-    this.cardType = '',
-    this.cardPrice = '',
   });
 }

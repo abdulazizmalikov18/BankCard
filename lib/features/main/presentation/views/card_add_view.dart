@@ -1,4 +1,5 @@
 import 'dart:io';
+import "dart:math";
 
 import 'package:bankcard/assets/colors/colors.dart';
 import 'package:bankcard/assets/constants/formatters.dart';
@@ -27,7 +28,7 @@ class _AddCardViewState extends State<AddCardView> {
   TextEditingController controllerCardNumber = TextEditingController();
   TextEditingController controllerCardCvv = TextEditingController();
   TextEditingController dateController = TextEditingController();
-  int select = 0;
+  int select = Random().nextInt(7);
   bool isImage = true;
   CardType cardType = CardType.Invalid;
 
@@ -251,8 +252,6 @@ class _AddCardViewState extends State<AddCardView> {
                     cardDate: dateController.text,
                     cardName: controller.text,
                     cardNumber: controllerCardNumber.text,
-                    cardPrice: '0',
-                    cardType: 'humo',
                     colors: select,
                   ),
                 );

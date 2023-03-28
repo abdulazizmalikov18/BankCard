@@ -22,19 +22,21 @@ class CardBloc extends Bloc<CardEvent, CardState> {
       emit(state.copyWith(cardsList: bankCards));
     });
 
-    on<CardEdit>((event, emit) {
-      List<CardEntity> list = List.from(state.cards);
-      list[event.index] = CardEntity(
-        cardCvv: event.cardCvv,
+    on<CardEdit>((event, emit) async {
+      final bankCard = BankCardEntity(
+        id: event.index,
+        cardHolderName: event.cardName,
         cardNumber: event.cardNumber,
-        cardDate: event.cardDate,
-        cardName: event.cardName,
-        assets: 'assets/images/card_1.jpg',
-        cardType: event.cardType,
-        cardPrice: event.cardPrice,
-        file: event.image,
+        expiryDate: event.cardDate,
+        cvvCode: event.cardCvv,
+        file: event.image?.path,
+        assets: event.assets,
+        color: event.colors,
+        isImage: event.status == CardDesign.assets ? 0 : 1,
       );
-      emit(state.copyWith(cards: list));
+      final id = await BankCardDatabase.instance.update(bankCard);
+      print('Saved bank card with id: $id');
+      add(CardsList());
     });
     on<CardListAdd>((event, emit) async {
       final idMy = DateTime.now().millisecondsSinceEpoch;

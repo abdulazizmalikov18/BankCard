@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bankcard/features/common/components/card_type.dart';
 import 'package:bankcard/features/main/presentation/controllers/card/card_bloc.dart';
 import 'package:bankcard/features/main/presentation/views/card_add_view.dart';
 import 'package:bankcard/features/main/presentation/views/card_edit_view.dart';
@@ -33,31 +32,35 @@ class MainViewState extends State<MainView> {
         builder: (context, state) {
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
+            itemCount: state.cardsList.length,
             itemBuilder: (context, index) => BankCard(
               imageMy: state.cardsList[index].file == null
                   ? null
                   : File(state.cardsList[index].file!),
               image: state.cardsList[index].assets,
               date: state.cardsList[index].expiryDate,
-              name: state.cardsList[index].cvvCode,
+              name: state.cardsList[index].cardHolderName,
               number: state.cardsList[index].cardNumber,
-              price: state.cardsList[index].cardHolderName,
-              type: CardType.Humo,
-              // type: MyFunction.cardType(type: state.cards[index].cardType),
+              price: state.cardsList[index].cvvCode,
+              type: MyFunction.getCardTypeFrmNumber(
+                state.cardsList[index].cardNumber,
+              ),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => CardEditView(
+                    id: state.cardsList[index].id,
                     image: state.cardsList[index].assets!,
                     date: state.cardsList[index].expiryDate,
                     name: state.cardsList[index].cardHolderName,
                     number: state.cardsList[index].cardNumber,
-                    price: '2+',
+                    price: state.cardsList[index].cvvCode,
+                    cvvCode: state.cardsList[index].cvvCode,
                     file: state.cardsList[index].file == null
                         ? null
                         : File(state.cardsList[index].file!),
-                    type: CardType.Humo,
-                    // type:
-                    //     MyFunction.cardType(type: state.cardsList[index].cardType),
+                    type: MyFunction.getCardTypeFrmNumber(
+                      state.cardsList[index].cardNumber,
+                    ),
                   ),
                 ),
               ),
