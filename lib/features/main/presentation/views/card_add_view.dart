@@ -9,6 +9,8 @@ import 'package:bankcard/features/common/widgets/w_scale.dart';
 import 'package:bankcard/features/common/widgets/w_textfield.dart';
 import 'package:bankcard/features/main/presentation/controllers/card/card_bloc.dart';
 import 'package:bankcard/features/main/presentation/widgets/bank_card.dart';
+import 'package:bankcard/features/main/presentation/widgets/color_selector.dart';
+import 'package:bankcard/features/main/presentation/widgets/image_container_selector.dart';
 import 'package:bankcard/utils/my_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,11 +31,7 @@ class _AddCardViewState extends State<AddCardView> {
   TextEditingController controllerCardCvv = TextEditingController();
   TextEditingController dateController = TextEditingController();
   int select = Random().nextInt(7);
-  bool isImage = true,
-      nameEmpty = false,
-      numberEmpty = false,
-      cvvCodeEmpty = false,
-      dateEmpty = false;
+  bool isImage = true;
   CardType cardType = CardType.Invalid;
 
   File? imageMy;
@@ -111,32 +109,10 @@ class _AddCardViewState extends State<AddCardView> {
                         imageMy = null;
                       });
                     },
-                    child: Container(
-                      margin: const EdgeInsets.all(4),
-                      height: 52,
-                      width: 52,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60),
-                        image: DecorationImage(
-                          image: AssetImage(images[index]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: select == index && isImage
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black26,
-                                borderRadius: BorderRadius.circular(60),
-                              ),
-                              padding: const EdgeInsets.all(12),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(60),
-                                  border: Border.all(width: 5, color: white),
-                                ),
-                              ),
-                            )
-                          : null,
+                    child: ImageContainerSelector(
+                      select: select,
+                      isImage: isImage,
+                      index: index,
                     ),
                   ),
                 ),
@@ -156,29 +132,10 @@ class _AddCardViewState extends State<AddCardView> {
                         imageMy = null;
                       });
                     },
-                    child: Container(
-                      margin: const EdgeInsets.all(4),
-                      height: 52,
-                      width: 52,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60),
-                        gradient: colors[index],
-                      ),
-                      child: select == index && !isImage
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black26,
-                                borderRadius: BorderRadius.circular(60),
-                              ),
-                              padding: const EdgeInsets.all(12),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(60),
-                                  border: Border.all(width: 5, color: white),
-                                ),
-                              ),
-                            )
-                          : null,
+                    child: ColorContainerSelector(
+                      select: select,
+                      isImage: isImage,
+                      index: index,
                     ),
                   ),
                 ),
@@ -187,11 +144,6 @@ class _AddCardViewState extends State<AddCardView> {
                 controller: controller,
                 hintText: "Card Name",
                 onChanged: (value) {
-                  if (value.isEmpty) {
-                    nameEmpty = false;
-                  } else {
-                    nameEmpty = true;
-                  }
                   setState(() {});
                 },
               ),
@@ -201,36 +153,21 @@ class _AddCardViewState extends State<AddCardView> {
                     flex: 3,
                     child: MyTextField(
                       onChanged: (value) {
-                        if (value.isEmpty || value.length < 18) {
-                          numberEmpty = false;
-                        } else {
-                          numberEmpty = true;
-                        }
                         setState(() {});
                       },
                       controller: controllerCardNumber,
                       margin: const EdgeInsets.only(left: 16),
                       type: TextInputType.number,
                       hintText: '#### #### #### ####',
-                      formatter: [cardFormatr],
+                      formatter: [Formatters.cardFormatter],
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: MyTextField(
-                      onChanged: (value) {
-                        if (value.isEmpty || value.length < 2) {
-                          cvvCodeEmpty = false;
-                        } else {
-                          cvvCodeEmpty = true;
-                        }
-                      },
                       controller: controllerCardCvv,
                       hintText: '###',
-                      formatter: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(3),
-                      ],
+                      formatter: [Formatters.cvvFormatr],
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       type: TextInputType.number,
                     ),
@@ -243,18 +180,9 @@ class _AddCardViewState extends State<AddCardView> {
                   controller: dateController,
                   hintText: '##/##',
                   onChanged: (value) {
-                    if (value.isEmpty || value.length < 3) {
-                      dateEmpty = false;
-                    } else {
-                      dateEmpty = true;
-                    }
                     setState(() {});
                   },
-                  formatter: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(4),
-                    CardMonthInputFormatter(),
-                  ],
+                  formatter: [Formatters.cardExpirationDateFormatter],
                   type: TextInputType.datetime,
                 ),
               ),
@@ -264,26 +192,24 @@ class _AddCardViewState extends State<AddCardView> {
         bottomNavigationBar: WButton(
           margin: const EdgeInsets.fromLTRB(16, 01, 16, 16),
           text: 'Save',
+          isDisabled: !(dateController.text.length == 5 &&
+              controllerCardNumber.text.length == 19 &&
+              controllerCardCvv.text.length == 3 &&
+              controller.text.isNotEmpty),
           onTap: () {
-            if (nameEmpty && numberEmpty && cvvCodeEmpty && dateEmpty) {
-              context.read<CardBloc>().add(
-                    CardListAdd(
-                      image: imageMy,
-                      assets: images[select],
-                      status: isImage ? CardDesign.assets : CardDesign.colors,
-                      cardCvv: controllerCardCvv.text,
-                      cardDate: dateController.text,
-                      cardName: controller.text,
-                      cardNumber: controllerCardNumber.text,
-                      colors: select,
-                    ),
-                  );
-              Navigator.pop(context);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Malumotlarni toldiring')),
-              );
-            }
+            context.read<CardBloc>().add(
+                  CardListAdd(
+                    image: imageMy,
+                    assets: images[select],
+                    status: isImage ? CardDesign.assets : CardDesign.colors,
+                    cardCvv: controllerCardCvv.text,
+                    cardDate: dateController.text,
+                    cardName: controller.text,
+                    cardNumber: controllerCardNumber.text,
+                    colors: select,
+                  ),
+                );
+            Navigator.pop(context);
           },
         ),
       ),

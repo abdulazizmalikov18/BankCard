@@ -7,6 +7,8 @@ import 'package:bankcard/features/common/widgets/w_scale.dart';
 import 'package:bankcard/features/common/widgets/w_textfield.dart';
 import 'package:bankcard/features/main/presentation/controllers/card/card_bloc.dart';
 import 'package:bankcard/features/main/presentation/widgets/bank_card.dart';
+import 'package:bankcard/features/main/presentation/widgets/color_selector.dart';
+import 'package:bankcard/features/main/presentation/widgets/image_container_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -115,33 +117,10 @@ class _CardEditViewState extends State<CardEditView> {
                             imageMy = null;
                           });
                         },
-                        child: Container(
-                          margin: const EdgeInsets.all(4),
-                          height: 52,
-                          width: 52,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(60),
-                            image: DecorationImage(
-                              image: AssetImage(images[index]),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: select == index && isImage
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black26,
-                                    borderRadius: BorderRadius.circular(60),
-                                  ),
-                                  padding: const EdgeInsets.all(12),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(60),
-                                      border:
-                                          Border.all(width: 5, color: white),
-                                    ),
-                                  ),
-                                )
-                              : null,
+                        child: ImageContainerSelector(
+                          select: select,
+                          isImage: isImage,
+                          index: index,
                         ),
                       ),
                     ),
@@ -161,30 +140,10 @@ class _CardEditViewState extends State<CardEditView> {
                             imageMy = null;
                           });
                         },
-                        child: Container(
-                          margin: const EdgeInsets.all(4),
-                          height: 52,
-                          width: 52,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(60),
-                            gradient: colors[index],
-                          ),
-                          child: select == index && !isImage
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black26,
-                                    borderRadius: BorderRadius.circular(60),
-                                  ),
-                                  padding: const EdgeInsets.all(12),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(60),
-                                      border:
-                                          Border.all(width: 5, color: white),
-                                    ),
-                                  ),
-                                )
-                              : null,
+                        child: ColorContainerSelector(
+                          select: select,
+                          isImage: isImage,
+                          index: index,
                         ),
                       ),
                     ),
